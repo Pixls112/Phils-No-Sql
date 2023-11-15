@@ -1,6 +1,6 @@
 const { User, Thought } = require('../models');
 
-const getThought = async (res, req) => {
+const getThought = async (req, res) => {
     try {
         const thoughtData = await Thought.find()
         res.json(thoughtData)
@@ -10,24 +10,24 @@ const getThought = async (res, req) => {
     }
 }
 
-const createThought = async (res, req) => {
+const createThought = async (req, res) => {
     try {
         const thought = await Thought.create(req.body)
         const user = await User.findOneAndUpdate(
             { _id: req.body.userId },
-            { $push: { thought: thought._id } },
-            { new: true }
-        )
+            {  $addToSet: { thoughts: thought._id } },
+            {  new: true }
+        );
         res.json(user);
     }
     catch (err) {
-        console.log("There was an error")
+        console.log("There was an error creating thought")
         res.status(500).json(err)
     }
 
 }
 
-const updateThought = async (res, req) => {
+const updateThought = async (req, res) => {
     try {
         const thought = await Thought.findOneAndUpdate(
             { _id: req.params.id },
@@ -42,7 +42,7 @@ const updateThought = async (res, req) => {
     }
 }
 
-const deleteThought = async (res, req) => {
+const deleteThought = async (req, res) => {
     try {
         const thought = await Thought.findOneAndDelete({ _id: req.params.thoughtId })
 
@@ -55,7 +55,7 @@ const deleteThought = async (res, req) => {
             { $pull: { thoughts: req.params.thoughtId } },
             { runValidators: true, new: true })
 
-        res.json({ message: 'Thought deleted' });
+        res.json({ message: 'Thought deleted', user });
     }
     catch (err) {
         res.status(500).json(err);
@@ -71,7 +71,7 @@ const createReaction = async (req, res) => {
         );
 
         if (!thought) {
-            return res.status(404).json({ message: 'Thought does not exist' });
+            return res.status(404).json({ message: 'Reaction failed to be created' });
         }
 
         res.json(thought);
@@ -90,10 +90,10 @@ const deleteReaction = async (req, res) => {
         )
 
         if (!reaction) {
-            return res.status(404).json({ message: 'Thought does not exist' });
+            return res.status(404).json({ message: 'Reaction does not exist' });
         }
 
-        res.json({ message: "reaction deleted!" });
+        res.json({ message: "Reaction deleted!" });
     }
     catch (err) {
         res.status(500).json(err);
