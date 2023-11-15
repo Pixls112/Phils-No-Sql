@@ -43,7 +43,7 @@ The main usage of this challenge was to demonstrate my ability to utilize all my
 
  ## Video
  ```
- WIP
+https://drive.google.com/file/d/1tl8Ex3Jwq84WSH52NZldMI1LUWkCuNoF/view
  ```
 
 

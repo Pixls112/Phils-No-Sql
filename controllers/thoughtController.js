@@ -41,7 +41,7 @@ const updateThought = async (req, res) => {
     try {
         //Finds the thought based on its ID and then sets in the new data provided
         const thought = await Thought.findOneAndUpdate(
-            { _id: req.params.id },
+            { _id: req.params.thoughtId },
             { $set: req.body },
             { runValidators: true, new: true }
         )
